@@ -10,11 +10,14 @@ public class GameController : MonoBehaviour {
 
 	private Text gameOverText = null;
 	private string playerSide;
+	private int turnCount;
+
 
 	void Awake()
 	{
 		SetGameControllerReferenceOnButtons();
 		playerSide = "X";
+		turnCount = 0;
 		gameOverText = gameOverPanel.GetComponentInChildren<Text>();
 
 		if(gameOverText == null) {
@@ -48,11 +51,13 @@ public class GameController : MonoBehaviour {
 
 	public void EndTurn(){
 
+		turnCount++;
+		bool gameFinished = false;
 		//horizontal
 		for (int i = 0; i < 9; i += 3) {
 
 			if(buttonList[0 + i].text == playerSide && buttonList[1 + i].text == playerSide && buttonList[2 + i].text == playerSide) {
-				GameOver();
+				gameFinished = true;
 			}
 		}
 
@@ -60,25 +65,39 @@ public class GameController : MonoBehaviour {
 		for(int i = 0;i<3;++i){
 			
 			if(buttonList[0+i].text == playerSide && buttonList[3+i].text == playerSide && buttonList[6+i].text == playerSide) {
-				GameOver();
+				gameFinished = true;
 			}
 		}
 
 		//left -> right diagonal
 		if (buttonList [0].text == playerSide && buttonList [4].text == playerSide && buttonList [8].text == playerSide)
 		{
-			GameOver();
+			gameFinished = true;
 		}
 
 		//right -> left diagonal
 		if (buttonList [2].text == playerSide && buttonList [4].text == playerSide && buttonList [6].text == playerSide)
 		{
-			GameOver();
+			gameFinished = true;
 		}
-		changeSides();
+
+		//check to see if we call gameover for win or draw
+		if(gameFinished) {
+			GameOver(true);
+		} else {
+			//check for draw
+			if(turnCount > 8) {
+				GameOver(false);
+			} else {
+				changeSides();
+			}
+		}
+
+
 	}
 
-	private void GameOver(){
+	private void GameOver(bool win){
+		
 		Button b = null;
 		for(int i = 0; i < 9; i++){
 			b = buttonList[i].GetComponentInParent<Button>();
@@ -87,8 +106,11 @@ public class GameController : MonoBehaviour {
 				b.interactable = false;
 			}
 		}
-
-		gameOverText.text = playerSide+"'s win!";
+		if(win) {
+			gameOverText.text = playerSide + "'s win!";
+		} else {
+			gameOverText.text = "It's a draw!";
+		}
 		gameOverPanel.SetActive(true);
 		reset();
 	}
@@ -99,6 +121,9 @@ public class GameController : MonoBehaviour {
 
 	void reset(){
 		GridSpace gs = null;
+		turnCount = 0;
+		playerSide = "X";
+
 		for(int i = 0; i < 9; i++){
 			gs = buttonList[i].GetComponentInParent<GridSpace>();
 
