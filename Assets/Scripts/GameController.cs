@@ -6,13 +6,23 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour {
 
 	public Text[] buttonList;
+	public GameObject gameOverPanel;
 
+	private Text gameOverText = null;
 	private string playerSide;
 
 	void Awake()
 	{
 		SetGameControllerReferenceOnButtons();
 		playerSide = "X";
+		gameOverText = gameOverPanel.GetComponentInChildren<Text>();
+
+		if(gameOverText == null) {
+			Debug.Log("failed to get gameover text object");
+		} else {
+			gameOverText.text = "";
+			gameOverPanel.SetActive(false);
+		}
 	}
 
 	void SetGameControllerReferenceOnButtons()
@@ -78,7 +88,8 @@ public class GameController : MonoBehaviour {
 			}
 		}
 
-		Debug.Log("Game Over, "+playerSide+"'s win!");
+		gameOverText.text = playerSide+"'s win!";
+		gameOverPanel.SetActive(true);
 		reset();
 	}
 
