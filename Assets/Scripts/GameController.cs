@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour {
 
 	public Text[] buttonList;
 	public GameObject gameOverPanel;
+	public Button restartButton;
 
 	private Text gameOverText = null;
 	private string playerSide;
@@ -112,14 +113,14 @@ public class GameController : MonoBehaviour {
 			gameOverText.text = "It's a draw!";
 		}
 		gameOverPanel.SetActive(true);
-		reset();
+		restartButton.interactable = true;
 	}
 
 	void changeSides(){
 		playerSide = (playerSide == "X") ? "O" : "X";
 	}
 
-	void reset(){
+	public void reset(){
 		GridSpace gs = null;
 		turnCount = 0;
 		playerSide = "X";
@@ -131,5 +132,7 @@ public class GameController : MonoBehaviour {
 				gs.reset();
 			}
 		}
+
+		gameOverPanel.SetActive(false);
 	}
 }
