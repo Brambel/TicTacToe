@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
 	public Text[] buttonList;
 	public GameObject gameOverPanel;
 	public Button restartButton;
+    public Text turnIndicator;
 
 	private Text gameOverText = null;
 	private string playerSide;
@@ -18,6 +19,7 @@ public class GameController : MonoBehaviour {
 	{
 		SetGameControllerReferenceOnButtons();
 		playerSide = "X";
+        turnIndicator.text = playerSide;
 		turnCount = 0;
 		gameOverText = gameOverPanel.GetComponentInChildren<Text>();
 
@@ -118,6 +120,7 @@ public class GameController : MonoBehaviour {
 
 	void changeSides(){
 		playerSide = (playerSide == "X") ? "O" : "X";
+        turnIndicator.text = playerSide;
 	}
 
 	public void reset(){
